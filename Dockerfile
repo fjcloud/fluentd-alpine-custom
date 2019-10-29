@@ -24,14 +24,9 @@ RUN apk update \
  && gem install fluent-plugin-kubernetes_metadata_filter -v 2.4.0 \
  && gem install fluent-plugin-multi-format-parser -v 1.0.0 \
  && apk del .build-deps \
- && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
-
-RUN adduser -u 50001 -S fluent -G root \
-# for log storage (maybe shared with host)
-    && mkdir -p /fluentd/log \
-    # configuration/plugins path (default: copied from .)
-    && mkdir -p /fluentd/etc /fluentd/plugins \
-    && chown -R fluent /fluentd && chgrp -R fluent /fluentd
+ && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem \
+ && mkdir -p /fluentd/log \
+ && mkdir -p /fluentd/etc /fluentd/plugins
 
 
 COPY fluent.conf /fluentd/etc/
@@ -44,6 +39,5 @@ ENV FLUENTD_CONF="fluent.conf"
 ENV LD_PRELOAD=""
 EXPOSE 24224 5140
 
-USER fluent
 ENTRYPOINT ["tini",  "--", "/bin/entrypoint.sh"]
 CMD ["fluentd"]
