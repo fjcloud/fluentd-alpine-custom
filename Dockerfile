@@ -26,7 +26,7 @@ RUN apk update \
  && apk del .build-deps \
  && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
 
-RUN adduser -u 50001 -S fluent && usermod -a -G root fluent \
+RUN adduser -u 50001 -S fluent -G root \
 # for log storage (maybe shared with host)
     && mkdir -p /fluentd/log \
     # configuration/plugins path (default: copied from .)
