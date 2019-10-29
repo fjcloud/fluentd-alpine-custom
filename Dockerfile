@@ -26,8 +26,8 @@ RUN apk update \
  && apk del .build-deps \
  && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
 
-RUN addgroup -S fluent && adduser -S -g fluent fluent \
-    # for log storage (maybe shared with host)
+RUN adduser -u 50001 -S fluent && usermod -a -G root fluent \
+# for log storage (maybe shared with host)
     && mkdir -p /fluentd/log \
     # configuration/plugins path (default: copied from .)
     && mkdir -p /fluentd/etc /fluentd/plugins \
@@ -47,4 +47,3 @@ EXPOSE 24224 5140
 USER fluent
 ENTRYPOINT ["tini",  "--", "/bin/entrypoint.sh"]
 CMD ["fluentd"]
-
